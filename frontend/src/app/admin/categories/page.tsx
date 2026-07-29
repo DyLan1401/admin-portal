@@ -1,3 +1,10 @@
+import Placeholder from "@/components/common/Placeholder";
+
 export default function CategoriesPage() {
-    return <h1>Categories</h1>;
+    return <>
+        <Placeholder
+            title="CATEGORIES"
+            description="Coming Soon"
+        />
+    </>;
 }

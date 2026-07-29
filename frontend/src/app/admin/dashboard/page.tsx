@@ -1,3 +1,10 @@
+import Placeholder from "@/components/common/Placeholder";
+
 export default function DashboardPage() {
-    return <h1>Dashboard</h1>;
+    return <>
+        <Placeholder
+            title="DASHBOARD"
+            description="Coming Soon"
+        />
+    </>;
 }

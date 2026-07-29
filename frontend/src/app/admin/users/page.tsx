@@ -1,3 +1,10 @@
+import Placeholder from "@/components/common/Placeholder";
+
 export default function UsersPage() {
-    return <h1>Users</h1>;
+    return <>
+        <Placeholder
+            title="USERS"
+            description="Coming Soon"
+        />
+    </>;
 }

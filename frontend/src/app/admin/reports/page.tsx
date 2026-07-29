@@ -1,3 +1,11 @@
+import Placeholder from "@/components/common/Placeholder";
 export default function ReportsPage() {
-    return <h1>Reports</h1>;
+    return (
+        <>
+            <Placeholder
+                title="REPORTS"
+                description="Coming Soon"
+            />
+        </>
+    );
 }

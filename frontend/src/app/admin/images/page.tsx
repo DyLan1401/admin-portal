@@ -1,3 +1,10 @@
+import Placeholder from "@/components/common/Placeholder";
+
 export default function ImagesPage() {
-    return <h1>Images</h1>;
+    return <>
+        <Placeholder
+            title="IMAGES"
+            description="Đang Triển khai"
+        />
+    </>;
 }

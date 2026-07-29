@@ -1,3 +1,10 @@
+import Placeholder from "@/components/common/Placeholder";
+
 export default function SettingsPage() {
-    return <h1>Settings</h1>;
+    return <>
+        <Placeholder
+            title="SETTINGS"
+            description="Coming Soon"
+        />
+    </>;
 }
