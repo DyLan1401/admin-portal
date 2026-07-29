@@ -1,12 +1,9 @@
-export default function AdminLayout({
+import AdminLayout from "@/components/layout/AdminLayout";
+
+export default function Layout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return (
-        <>
-            <h1>Admin Portal</h1>
-            <main>{children}</main>
-        </>
-    );
+    return <AdminLayout>{children}</AdminLayout>;
 }
