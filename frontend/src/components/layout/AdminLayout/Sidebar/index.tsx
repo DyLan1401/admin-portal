@@ -56,7 +56,7 @@ const menuItems = [
 export default function Sidebar() {
     const pathname = usePathname();
     return (
-        <div className="py-4 flex flex-col h-full text-center">
+        <div className="py-4 flex flex-col h-full text-center overflow-auto">
             <div className="text-2xl font-bold text-blue-600 mb-8 px-2">Quản trị</div>
             <div className="border"></div>
             <nav className="space-y-1 ">
