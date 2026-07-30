@@ -26,9 +26,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     return (
         <div className="flex h-screen bg-gray-100">
             {/* 1. Sidebar bên trái */}
-            <aside className="w-64 bg-white border-r hidden md:block">
-                <Sidebar collapsed={collapsed} />
-            </aside>
+            <Sidebar collapsed={collapsed} />
 
             {/* 2. Phần nội dung bên phải */}
             <div className="flex-1 flex flex-col overflow-hidden">
@@ -37,7 +35,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     // collapsed={collapsed}
                     onToggle={toggleSidebar}
                 />
-                <MainContent >
+                <MainContent
+                    pageTitle={pageTitle}
+                >
                     {children}
                 </MainContent>
             </div>
