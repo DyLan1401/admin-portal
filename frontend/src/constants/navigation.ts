@@ -4,26 +4,26 @@ import { LayoutDashboard, Images, Users, FolderTree, BookDown, Settings2 } from 
 export const ADMIN_NAVIGATION = [
     {
         icon: LayoutDashboard,
-        label: "Dashboard", path: "/admin"
+        label: "Dashboard", href: "/admin"
     },
     {
         icon: Images,
-        label: "Hình ảnh", path: "/admin/images"
+        label: "Hình ảnh", href: "/admin/images"
     },
     {
         icon: FolderTree,
-        label: "Danh mục", path: "/admin/categories"
+        label: "Danh mục", href: "/admin/categories"
     },
     {
         icon: Users,
-        label: "Người dùng", path: "/admin/users"
+        label: "Người dùng", href: "/admin/users"
     },
     {
         icon: BookDown,
-        label: "Báo cáo", path: "/admin/reports"
+        label: "Báo cáo", href: "/admin/reports"
     },
     {
         icon: Settings2,
-        label: "Cài đặt", path: "/admin/settings"
+        label: "Cài đặt", href: "/admin/settings"
     },
 ];
