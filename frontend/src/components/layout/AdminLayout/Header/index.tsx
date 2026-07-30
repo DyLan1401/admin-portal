@@ -3,7 +3,7 @@ import HeaderRight from "./HeaderRight";
 
 interface HeaderProps {
     pageTitle: string;
-    collapsed: boolean;
+    // collapsed: boolean;
     onToggle: () => void;
 }
 

@@ -1,7 +1,7 @@
 export default function HeaderRight() {
     return (
         <div className="flex items-center gap-3">
-            <div className="text-right">
+            <div className="text-right hidden lg:block">
                 <p className="text-sm font-medium text-gray-900">
                     Admin
                 </p>

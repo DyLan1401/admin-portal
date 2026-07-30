@@ -2,15 +2,18 @@ import SidebarHeader from "./SidebarHeader";
 import SidebarMenu from "./SidebarMenu";
 import SidebarFooter from "./SidebarFooter";
 
-
-export default function Sidebar() {
+interface SidebarProps {
+    collapsed: boolean;
+}
+export default function Sidebar({
+    collapsed,
+}: SidebarProps) {
 
     return (
 
-        <aside
+        <div
             className="flex h-screen w-64 flex-col border-r bg-white"
         >
-
             <SidebarHeader />
 
             <div className="flex-1 overflow-y-auto">
@@ -21,7 +24,7 @@ export default function Sidebar() {
 
             <SidebarFooter />
 
-        </aside>
+        </div>
 
     );
 
