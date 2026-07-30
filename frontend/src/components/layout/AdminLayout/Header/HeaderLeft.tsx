@@ -2,20 +2,19 @@ import { Menu } from "lucide-react";
 
 interface HeaderLeftProps {
     pageTitle: string;
-    // collapsed: boolean;
-    onToggle: () => void;
+    onOpenMenu: () => void;
 }
 
 export default function HeaderLeft({
     pageTitle,
-    // collapsed,
-    onToggle,
+    onOpenMenu,
 }: HeaderLeftProps) {
     return (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ">
             <button
-                onClick={onToggle}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100"
+                type="button"
+                onClick={onOpenMenu}
+                className=" md:hidden mr-3 rounded-lg p-2 hover:bg-gray-100 transition-colors"
             >
                 <Menu size={20} />
             </button>

@@ -4,7 +4,7 @@ import { LayoutDashboard, Images, Users, FolderTree, BookDown, Settings2 } from 
 export const ADMIN_NAVIGATION = [
     {
         icon: LayoutDashboard,
-        label: "Dashboard", href: "/admin"
+        label: "Dashboard", href: "/admin/dashboard"
     },
     {
         icon: Images,

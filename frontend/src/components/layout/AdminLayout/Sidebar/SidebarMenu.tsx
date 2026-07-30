@@ -3,8 +3,13 @@
 import { usePathname } from "next/navigation";
 import { ADMIN_NAVIGATION } from "@/constants/navigation";
 import SidebarItem from "./SidebarItem";
+interface SidebarMenuProps {
+    collapsed: boolean;
+    onCloseMobileMenu: () => void;
 
-export default function SidebarMenu() {
+}
+
+export default function SidebarMenu({ collapsed, onCloseMobileMenu }: SidebarMenuProps) {
 
     const pathname = usePathname();
 
@@ -18,6 +23,8 @@ export default function SidebarMenu() {
                     href={item.href}
                     icon={item.icon}
                     active={pathname === item.href}
+                    collapsed={collapsed}
+                    onCloseMobileMenu={onCloseMobileMenu}
                 />
             ))}
 
