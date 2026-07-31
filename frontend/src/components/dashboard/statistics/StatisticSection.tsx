@@ -1,5 +1,5 @@
 import StatisticGrid from "./StatisticGrid";
-import { statisticsMock } from "./statistics.mock";
+import { statisticsMock } from "./statisticsMock";
 
 export default function StatisticSection() {
     return (

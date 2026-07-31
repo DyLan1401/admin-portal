@@ -1,5 +1,5 @@
 import SystemStatusGrid from "./SystemStatusGrid";
-import { systemStatusMock } from "./SystemStatus.mock";
+import { systemStatusMock } from "./SystemStatusMock";
 
 export default function SystemStatusSection() {
     return (
