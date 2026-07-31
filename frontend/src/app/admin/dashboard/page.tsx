@@ -1,10 +1,6 @@
-import Placeholder from "@/components/common/Placeholder";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+
 
 export default function DashboardPage() {
-    return <>
-        <Placeholder
-            title="DASHBOARD"
-            description="Coming Soon"
-        />
-    </>;
+    return <DashboardLayout />;
 }
