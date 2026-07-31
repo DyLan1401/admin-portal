@@ -1,13 +1,23 @@
-export default function Header() {
-    return (
-        <div className="container  ">
-            <div className="flex flex-col w-full h-full">
-                <div className="flex justify-between h-20 items-center px-5 border-b-2 bg-white">
-                    <div>1</div>
-                    <div>User Information</div>
-                </div>
+import HeaderLeft from "./HeaderLeft";
+import HeaderRight from "./HeaderRight";
 
-            </div>
-        </div >
-    )
+interface HeaderProps {
+    pageTitle: string;
+    onOpenMenu: () => void;
+}
+
+export default function Header({
+    pageTitle,
+    onOpenMenu,
+}: HeaderProps) {
+    return (
+        <header className="flex items-center justify-between border-b bg-white px-6 py-4">
+            <HeaderLeft
+                pageTitle={pageTitle}
+                onOpenMenu={onOpenMenu}
+            />
+
+            <HeaderRight />
+        </header>
+    );
 }
