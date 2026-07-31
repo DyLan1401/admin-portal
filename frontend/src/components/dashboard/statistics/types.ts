@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export interface StatisticCardProps {
     icon: LucideIcon;
@@ -6,9 +6,7 @@ export interface StatisticCardProps {
     value: number;
 }
 
-export interface StatisticItem {
+export interface StatisticItem extends StatisticCardProps {
     id: string;
-    title: string;
-    value: number;
-    icon: LucideIcon;
+
 }

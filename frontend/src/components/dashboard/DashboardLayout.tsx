@@ -1,6 +1,6 @@
 import DashboardSection from "./DashboardSection";
 import StatisticSection from "./statistics/StatisticSection";
-
+import SystemStatusSection from "./systemStatus/SystemStatusSection";
 export default function DashboardLayout() {
     return (
         <div className="space-y-6">
@@ -13,7 +13,7 @@ export default function DashboardLayout() {
             </DashboardSection>
 
             <DashboardSection title="System Status">
-                Coming soon...
+                <SystemStatusSection />
             </DashboardSection>
         </div>
     );
