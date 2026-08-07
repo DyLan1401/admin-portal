@@ -1,10 +1,6 @@
-import Placeholder from "@/components/common/Placeholder";
+import UserList from "@/components/user/userList";
 
-export default function UsersPage() {
-    return <>
-        <Placeholder
-            title="USERS"
-            description="Coming Soon"
-        />
-    </>;
+export default function UserPage() {
+
+    return <UserList />
 }

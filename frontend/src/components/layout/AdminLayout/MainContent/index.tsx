@@ -15,7 +15,7 @@ export default function MainContent({
         <main
             className="flex-1 overflow-y-auto p-6">
             <section className="mb-6">
-                <Breadcrumb pageTitle={pageTitle} />
+                <Breadcrumb />
                 <h1 className="mt-2  text-3xl font-bold">
                     {pageTitle}
                 </h1>
