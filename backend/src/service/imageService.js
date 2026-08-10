@@ -117,7 +117,11 @@ const saveImage = async (imageData) => {
             ...imageData
         }
     } catch (error) {
-        throw new AppError("Database query failed", 500);
+        if (error instanceof AppError) {
+            throw error;
+        }
+
+        throw new AppError("Database query failed.", 500);
 
     }
 };
@@ -168,7 +172,11 @@ export const PostImage = async ({ file, title, description }) => {
         //If save data error, rollback 
         await deleteImageFromCloudinary(publicId);
 
-        throw new AppError("Failed to save image uploaded file was rolled back.", 500);
+        if (error instanceof AppError) {
+            throw error;
+        }
+
+        throw new AppError("Database query failed.", 500);
     }
 
 };
@@ -213,6 +221,10 @@ export const GetImage = async ({ page, limit }) => {
             },
         };
     } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+
         throw new AppError("Database query failed.", 500);
     }
 }

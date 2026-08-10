@@ -4,5 +4,7 @@ import * as UserController from "../controller/userController.js"
 const route = Router();
 
 route.get("/users", UserController.getUsers);
+
+route.get("/users/:id", UserController.getUserDetail);
 route.patch("/users/:id/status", UserController.updateStatusUser)
 export default route;

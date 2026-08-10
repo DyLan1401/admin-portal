@@ -18,6 +18,23 @@ export const getUsers = async (req, res, next) => {
     }
 }
 
+export const getUserDetail = async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+
+        const result = await UserService.GetUserDetail({ id });
+
+        return res.status(200).json({
+            success: true,
+            message: "Get User successfully.",
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const updateStatusUser = async (req, res, next) => {
     try {
 
