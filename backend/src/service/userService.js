@@ -1,9 +1,10 @@
-import pool from "../config/database.js"
 import AppError from "../errors/AppError.js"
+import * as UserRepository from "../repository/userRepository.js"
 
 export const GetUsers = async ({ page, limit, search, status }) => {
     try {
-        //Query
+
+        //validate page và limit
         const currentPage = Math.max(1, Number.parseInt(page, 10) || 1);
         const currentLimit = Math.min(
             100, Math.max(1, Number.parseInt(limit, 10) || 20)
@@ -29,32 +30,17 @@ export const GetUsers = async ({ page, limit, search, status }) => {
             params.push(status);
         };
 
-        //Build Pagination
-        const [[countResult]] = await pool.query(
-            `
-            SELECT COUNT(*) AS total
-            FROM users u
-            ${whereClause}`,
-            params
-        );
-        const total = countResult.total;
+        // Count total users
+        const total = await UserRepository.countUsers({ whereClause, params });
+
+        // Calculate pagination
         const totalPages = Math.ceil(total / currentLimit);
         const offset = (currentPage - 1) * currentLimit;
 
-        //Query Database
-        const dataSql =
-            `
-            SELECT
-            u.id, u.full_name, u.email, u.status, u.role, u.created_at 
-            FROM users u
-            ${whereClause}
-            ORDER BY u.created_at DESC, u.id DESC
-            LIMIT ?
-            OFFSET ?`
+        // Get users
+        const result = await UserRepository.findUsers({ whereClause, params, limit: currentLimit, offset });
 
-        const [result] = await pool.query(dataSql, [...params, currentLimit, offset]);
-
-        //Return Response
+        //Return User List
         return {
             data: result,
             pagination: {
@@ -64,6 +50,34 @@ export const GetUsers = async ({ page, limit, search, status }) => {
                 total_pages: totalPages,
             },
         };
+
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError("Database query failed.", 500);
+    }
+}
+
+
+export const GetUserDetail = async ({ id }) => {
+    try {
+        //Validate id
+        const userId = Number(id);
+        if (!Number.isInteger(userId) || userId <= 0) {
+            throw new AppError("Invalid user id.", 400);
+        }
+
+        //Query DB find user by id
+        const user = await UserRepository.findUserById(userId);
+
+        //Business Rules
+        if (!user) {
+            throw new AppError(`User not found`, 404);
+        }
+
+        //Return User Detail
+        return user;
 
     } catch (error) {
         if (error instanceof AppError) {
@@ -95,22 +109,13 @@ export const updateUserStatus = async ({
         if (!allowedStatus.includes(status)) {
             throw new AppError("Invalid status.", 400);
         };
-
-        //Find User
-        const findUserSql =
-            `
-            SELECT
-            u.id, u.status, u.role 
-            FROM users u
-            Where u.id = ?
-            `;
-        const [[user]] = await pool.query(findUserSql, [userId]);
+        //
+        const user = await UserRepository.findUserById(userId);
 
         //Business Rules
         if (!user) {
             throw new AppError(`User not found`, 404);
         }
-
 
         // If status is unchanged.
         if (user.status === status) {
@@ -128,38 +133,17 @@ export const updateUserStatus = async ({
             throw new AppError("You cannot lock yourself out!", 400);
         }
 
-        //Update User Status
-        const updateUserSql = `
-        UPDATE users 
-        SET
-        status = ?,
-        updated_at=NOW()
-        WHERE id = ?
-        `;
-        await pool.query(updateUserSql, [status, userId]);
+        // Update
+        await UserRepository.updateUserStatus({
+            id: userId,
+            status,
+        });
 
-
-        //
-        const getUpdatedUserSql =
-            `
-            SELECT
-            u.id,
-            u.full_name,
-            u.email,
-            u.status,
-            u.role,
-            u.updated_at
-            FROM users u
-            WHERE u.id = ?
-            `;
-
-        const [[updatedUser]] = await pool.query(getUpdatedUserSql, [userId]);
-
+        // Get updated user
+        const updatedUser = await UserRepository.findUserById(userId);
 
         //Return Updated User
-        return {
-            data: updatedUser,
-        };
+        return updatedUser;
 
     } catch (error) {
         if (error instanceof AppError) {

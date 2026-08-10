@@ -1,5 +1,6 @@
 import multer from "multer";
 
+// eslint-disable-next-line no-unused-vars
 const globalErrorHandle = (err, req, res, next) => {
 
     if (err instanceof multer.MulterError) {
