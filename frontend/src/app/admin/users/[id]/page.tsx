@@ -1,3 +1,4 @@
+import UserDetail from "@/components/user/userDetail";
 export default function UserDetailPage() {
-    return <div>User Detail</div>;
+    return <UserDetail />;
 }

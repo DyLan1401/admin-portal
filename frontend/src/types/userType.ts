@@ -3,12 +3,15 @@ export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'LOCKED';
 
 export interface User {
     id: number;
-    avatar: string | null;
+    avatar: string;
     full_name: string;
     email: string;
+    phone: string | null;
     role: UserRole;
     status: UserStatus;
     created_at: string;
+    updated_at?: string;
+
 }
 
 export interface Pagination {
@@ -21,4 +24,8 @@ export interface Pagination {
 export interface GetUsersResponse {
     data: User[];
     pagination: Pagination;
+}
+
+export interface GetUserDetailResponse {
+    data: User;
 }

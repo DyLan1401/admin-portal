@@ -1,4 +1,4 @@
-import type { UserStatus } from "@/types/user.type";
+import type { UserStatus } from "@/types/userType";
 
 interface UserToolbarProps {
     search: string;

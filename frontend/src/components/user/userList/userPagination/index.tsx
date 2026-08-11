@@ -1,4 +1,4 @@
-import type { Pagination } from "@/types/user.type";
+import type { Pagination } from "@/types/userType";
 
 interface UserPaginationProps {
     pagination: Pagination;
