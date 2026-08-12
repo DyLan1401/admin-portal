@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { GetUserDetailResponse, GetUsersResponse, UserStatus } from "@/types/userType"
+import type { GetUserDetailResponse, GetUsersResponse, UserStatus, UpdateUserStatusResponse } from "@/types/userType"
 
 export const getUsers = async (
     page: number,
@@ -26,6 +26,20 @@ export const getUserById = async (
 ): Promise<GetUserDetailResponse> => {
     const response = await api.get<GetUserDetailResponse>(
         `/api/admin/users/${id}`
+    );
+
+    return response.data;
+};
+
+export const updateUserStatus = async (
+    id: number,
+    status: UserStatus
+): Promise<UpdateUserStatusResponse> => {
+    const response = await api.patch(
+        `/api/admin/users/${id}/status`,
+        {
+            status,
+        }
     );
 
     return response.data;

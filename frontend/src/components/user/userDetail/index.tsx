@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getUserById } from "@/services/userSerivce";
 import type { User } from "@/types/userType";
 import UserDetailCard from "./UserDetailCard";
-
+import UserStatusAction from "./UserStatusAction";
 export default function UserDetail() {
     const params = useParams();
     const router = useRouter();
@@ -14,6 +14,14 @@ export default function UserDetail() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const handleUpdateSuccess = async () => {
+        const userId = Number(params.id);
+
+        const result = await getUserById(userId);
+
+        setUser(result.data);
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -32,7 +40,7 @@ export default function UserDetail() {
 
                 setUser(result.data);
             } catch {
-                setError("Failed to load user.");
+                setError("User not found.");
             } finally {
                 setLoading(false);
             }
@@ -40,6 +48,7 @@ export default function UserDetail() {
 
         fetchUser();
     }, [params.id]);
+
 
     if (loading) {
         return <div>Loading user...</div>;
@@ -58,6 +67,13 @@ export default function UserDetail() {
             <div >
                 <UserDetailCard user={user} />
 
+            </div>
+            <div className="mt-4">
+                <UserStatusAction
+                    userId={user.id}
+                    status={user.status}
+                    onUpdateSuccess={handleUpdateSuccess}
+                />
             </div>
             <div className="mt-4">
                 <button

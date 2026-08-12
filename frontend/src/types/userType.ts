@@ -29,3 +29,8 @@ export interface GetUsersResponse {
 export interface GetUserDetailResponse {
     data: User;
 }
+
+export interface UpdateUserStatusResponse {
+    id: number
+    status: UserStatus
+}
