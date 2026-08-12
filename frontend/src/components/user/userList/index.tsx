@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getUsers } from "@/services/user.service";
+import { getUsers } from "@/services/userSerivce";
 import UserToolbar from "./userToolbar";
-import type { User, Pagination, UserStatus } from "@/types/user.type";
+import type { User, Pagination, UserStatus } from "@/types/userType";
 import UserTable from "./userTable";
 import UserPagination from "./userPagination";
 
@@ -73,9 +73,22 @@ export default function UserList() {
                 search={search}
                 status={status}
                 onSearchChange={setSearch}
-                onSearch={() => setSearchKeyword(search)}
-                onStatusChange={setStatus}
-                onReset={() => {
+                onSearch={() => {
+                    setSearchKeyword(search);
+
+                    setPagination((prev) => ({
+                        ...prev,
+                        page: 1,
+                    }));
+                }}
+                onStatusChange={(newStatus) => {
+                    setStatus(newStatus);
+
+                    setPagination((prev) => ({
+                        ...prev,
+                        page: 1,
+                    }));
+                }} onReset={() => {
                     setSearch("");
                     setSearchKeyword("");
                     setStatus("");

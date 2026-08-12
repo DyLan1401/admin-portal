@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { User } from "@/types/user.type";
+import type { User } from "@/types/userType";
 import { useRouter } from "next/navigation";
 
 interface UserRowProps {

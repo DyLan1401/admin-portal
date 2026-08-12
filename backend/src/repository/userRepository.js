@@ -46,6 +46,7 @@ export const findUsers = async ({
         `
         SELECT
             u.id,
+            u.avatar,
             u.full_name,
             u.email,
             u.status,
