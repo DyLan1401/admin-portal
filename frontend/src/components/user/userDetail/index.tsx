@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getUserById } from "@/services/userSerivce";
 import type { User } from "@/types/userType";
 import UserDetailCard from "./UserDetailCard";
-import UserStatusAction from "./UserStatusAction";
+
 export default function UserDetail() {
     const params = useParams();
     const router = useRouter();
@@ -63,23 +63,19 @@ export default function UserDetail() {
     }
 
     return (
-        <div >
-            <div >
-                <UserDetailCard user={user} />
+        <div>
+            <UserDetailCard
+                user={user}
+                onUpdateSuccess={handleUpdateSuccess}
+            />
 
-            </div>
-            <div className="mt-4">
-                <UserStatusAction
-                    userId={user.id}
-                    status={user.status}
-                    onUpdateSuccess={handleUpdateSuccess}
-                />
-            </div>
             <div className="mt-4">
                 <button
                     type="button"
-                    onClick={() => router.push("/admin/users")}
-                    className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:duration-300"
+                    onClick={() =>
+                        router.push("/admin/users")
+                    }
+                    className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     ← Back to Users
                 </button>

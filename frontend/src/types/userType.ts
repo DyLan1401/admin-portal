@@ -26,11 +26,12 @@ export interface GetUsersResponse {
     pagination: Pagination;
 }
 
-export interface GetUserDetailResponse {
-    data: User;
+
+export interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
 }
 
-export interface UpdateUserStatusResponse {
-    id: number
-    status: UserStatus
-}
+export type GetUserDetailResponse = ApiResponse<User>;
+export type UpdateUserStatusResponse = ApiResponse<User>;
