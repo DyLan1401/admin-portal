@@ -5,6 +5,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
 
 const api = axios.create({
     baseURL: `${API_URL.replace(/\/$/, "")}`,
+    headers: {
+
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_MOCK_TOKEN}`,
+    },
     timeout: 15000,
 });
 
