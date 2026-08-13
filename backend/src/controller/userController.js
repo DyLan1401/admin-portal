@@ -41,7 +41,7 @@ export const updateStatusUser = async (req, res, next) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        const result = await UserService.updateUserStatus({ id, status });
+        const result = await UserService.updateUserStatus({ id, status, currentUser: req.user, });
 
         return res.status(200).json({
             success: true,

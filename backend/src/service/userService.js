@@ -1,6 +1,13 @@
 import AppError from "../errors/AppError.js"
 import * as UserRepository from "../repository/userRepository.js"
 
+
+const ALLOWED_USER_STATUSES = [
+    "ACTIVE",
+    "INACTIVE",
+    "LOCKED",
+];
+
 export const GetUsers = async ({ page, limit, search, status }) => {
     try {
 
@@ -14,9 +21,9 @@ export const GetUsers = async ({ page, limit, search, status }) => {
         let whereClause = " WHERE 1=1 ";
 
         //Validate Query
-        if (status && status !== "ACTIVE" && status !== "INACTIVE" && status !== "LOCKED") {
+        if (status && !ALLOWED_USER_STATUSES.includes(status)) {
             throw new AppError("Invalid status.", 400);
-        };
+        }
 
         //Build Search & Filter
         if (search) {
@@ -87,16 +94,18 @@ export const GetUserDetail = async ({ id }) => {
     }
 }
 
+
+
 export const updateUserStatus = async ({
     id,
     status,
+    currentUser
 }) => {
     try {
-        //giả lập id và role của admin
-        const currentUserId = Number(process.env.DEV_CURRENT_USER_ID);
-        const currentUserRole = process.env.DEV_CURRENT_USER_ROLE;
+
         //Validate id
         const userId = Number(id);
+
         if (!Number.isInteger(userId) || userId <= 0) {
             throw new AppError("Invalid user id.", 400);
         }
@@ -105,10 +114,9 @@ export const updateUserStatus = async ({
         if (!status) {
             throw new AppError("Status is required.", 400);
         }
-        const allowedStatus = ["ACTIVE", "INACTIVE", "LOCKED"];
-        if (!allowedStatus.includes(status)) {
+        if (!ALLOWED_USER_STATUSES.includes(status)) {
             throw new AppError("Invalid status.", 400);
-        };
+        }
         //
         const user = await UserRepository.findUserById(userId);
 
@@ -123,13 +131,8 @@ export const updateUserStatus = async ({
                 "User is already in this status.", 400);
         }
 
-        // Check current user role
-        if (currentUserRole !== 'ADMIN') {
-            throw new AppError("Only admins have the authority to change a user's status!", 403);
-        }
-
         // Prevent locking current login user
-        if (user.id === currentUserId && status === 'LOCKED') {
+        if (user.id === currentUser.id && status === 'LOCKED') {
             throw new AppError("You cannot lock yourself out!", 400);
         }
 
