@@ -1,6 +1,13 @@
 import AppError from "../errors/AppError.js"
 import * as UserRepository from "../repository/userRepository.js"
 
+
+const ALLOWED_USER_STATUSES = [
+    "ACTIVE",
+    "INACTIVE",
+    "LOCKED",
+];
+
 export const GetUsers = async ({ page, limit, search, status }) => {
     try {
 
@@ -14,9 +21,9 @@ export const GetUsers = async ({ page, limit, search, status }) => {
         let whereClause = " WHERE 1=1 ";
 
         //Validate Query
-        if (status && status !== "ACTIVE" && status !== "INACTIVE" && status !== "LOCKED") {
+        if (status && !ALLOWED_USER_STATUSES.includes(status)) {
             throw new AppError("Invalid status.", 400);
-        };
+        }
 
         //Build Search & Filter
         if (search) {
@@ -87,6 +94,8 @@ export const GetUserDetail = async ({ id }) => {
     }
 }
 
+
+
 export const updateUserStatus = async ({
     id,
     status,
@@ -105,10 +114,9 @@ export const updateUserStatus = async ({
         if (!status) {
             throw new AppError("Status is required.", 400);
         }
-        const allowedStatus = ["ACTIVE", "INACTIVE", "LOCKED"];
-        if (!allowedStatus.includes(status)) {
+        if (!ALLOWED_USER_STATUSES.includes(status)) {
             throw new AppError("Invalid status.", 400);
-        };
+        }
         //
         const user = await UserRepository.findUserById(userId);
 
