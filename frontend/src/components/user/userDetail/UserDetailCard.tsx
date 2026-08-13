@@ -122,7 +122,7 @@ export default function UserDetailCard({
                     </p>
 
                     <select
-                        value={selectedStatus}
+                        value={isDialogOpen ? selectedStatus : user.status}
                         disabled={updating}
                         onChange={(event) =>
                             handleStatusChange(
@@ -204,6 +204,7 @@ export default function UserDetailCard({
                 open={isDialogOpen}
                 currentStatus={user.status}
                 newStatus={selectedStatus}
+                updating={updating}
                 onCancel={handleCancel}
                 onConfirm={handleConfirm}
             />
