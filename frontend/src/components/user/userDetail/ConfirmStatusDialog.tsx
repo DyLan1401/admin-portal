@@ -6,6 +6,7 @@ interface ConfirmStatusDialogProps {
     open: boolean;
     currentStatus: UserStatus;
     newStatus: UserStatus;
+    updating: boolean;
     onCancel: () => void;
     onConfirm: () => void;
 }
@@ -14,6 +15,7 @@ export default function ConfirmStatusDialog({
     open,
     currentStatus,
     newStatus,
+    updating,
     onCancel,
     onConfirm,
 }: ConfirmStatusDialogProps) {
@@ -45,6 +47,7 @@ export default function ConfirmStatusDialog({
                     <button
                         type="button"
                         onClick={onCancel}
+                        disabled={updating}
                         className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Cancel
@@ -53,9 +56,10 @@ export default function ConfirmStatusDialog({
                     <button
                         type="button"
                         onClick={onConfirm}
+                        disabled={updating}
                         className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
                     >
-                        Confirm
+                        {updating ? "Updating..." : "Confirm"}
                     </button>
                 </div>
             </div>
