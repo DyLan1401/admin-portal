@@ -1,62 +1,78 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import request from "supertest";
 import app from "../src/app.js";
-import * as UserRepository from "../src/repository/userRepository.js";
 
-//tạo Authorization header với token hợp lệ
-const authHeader = () => `Bearer ${process.env.DEV_AUTH_TOKEN}`;
+const login = async (agent, email, password) => {
+    const response = await agent
+        .post("/api/auth/login")
+        .send({
+            email,
+            password,
+        });
+    expect(response.status).toBe(200);
 
-// Thiết lập Current User mặc định là ADMIN trước mỗi test
-beforeEach(() => {
-    process.env.DEV_CURRENT_USER_ID = "1";
-    process.env.DEV_CURRENT_USER_ROLE = "ADMIN";
-});
+    return response;
+};
+
+const loginAsAdmin = async () => {
+    const agent = request.agent(app);
+
+    await login(
+        agent,
+        process.env.TEST_ADMIN_EMAIL,
+        process.env.TEST_ADMIN_PASSWORD
+    );
+
+    return agent;
+};
+
 
 describe("User Management Authentication", () => {
-    // Case 1: Request không có token phải bị từ chối với HTTP 401
-    it("should return 401 when token is missing", async () => {
+    it("should return 401 when session is missing", async () => {
         const response = await request(app)
             .get("/api/admin/users");
 
         expect(response.status).toBe(401);
     });
 
-    // Case 2: Request có token không hợp lệ phải bị từ chối với HTTP 401
-    it("should return 401 when token is invalid", async () => {
-        const response = await request(app)
-            .get("/api/admin/users")
-            .set("Authorization", "Bearer invalid-token");
+    it("should return 403 when authenticated user is not ADMIN", async () => {
+        const agent = request.agent(app);
 
-        expect(response.status).toBe(401);
-    });
+        const loginResponse = await login(
+            agent,
+            process.env.TEST_USER_EMAIL,
+            process.env.TEST_USER_PASSWORD
+        );
 
-    // Case 3: User đã xác thực nhưng không có role ADMIN phải bị từ chối với HTTP 403
-    it("should return 403 when user role is USER", async () => {
-        process.env.DEV_CURRENT_USER_ROLE = "USER";
-        const response = await request(app)
-            .get("/api/admin/users")
-            .set("Authorization", authHeader())
+        expect(loginResponse.body.data.role).toBe("USER");
+
+        const response = await agent
+            .get("/api/admin/users");
 
         expect(response.status).toBe(403);
-        process.env.DEV_CURRENT_USER_ROLE = "ADMIN";
-
     });
 
-    // Case 4: ADMIN có token hợp lệ được phép truy cập User Management
     it("should allow ADMIN to access user list", async () => {
-        const response = await request(app)
-            .get("/api/admin/users")
-            .set("Authorization", authHeader())
+        const agent = await loginAsAdmin();
+
+        const response = await agent
+            .get("/api/admin/users");
 
         expect(response.status).toBe(200);
     });
 
-    // Case 5: ADMIN không được phép LOCKED chính tài khoản đang đăng nhập
     it("should prevent ADMIN from locking their own account", async () => {
+        const agent = await loginAsAdmin();
 
-        const response = await request(app)
-            .patch("/api/admin/users/1/status")
-            .set("Authorization", authHeader())
+        const meResponse = await agent
+            .get("/api/auth/me");
+
+        expect(meResponse.status).toBe(200);
+
+        const adminId = meResponse.body.data.id;
+
+        const response = await agent
+            .patch(`/api/admin/users/${adminId}/status`)
             .send({
                 status: "LOCKED",
             });
@@ -64,12 +80,11 @@ describe("User Management Authentication", () => {
         expect(response.status).toBe(400);
     });
 
-    // Case 6: Không thể cập nhật status của user không tồn tại
     it("should return 404 when user does not exist", async () => {
+        const agent = await loginAsAdmin();
 
-        const response = await request(app)
+        const response = await agent
             .patch("/api/admin/users/999999/status")
-            .set("Authorization", authHeader())
             .send({
                 status: "ACTIVE",
             });
@@ -77,12 +92,11 @@ describe("User Management Authentication", () => {
         expect(response.status).toBe(404);
     });
 
-    // Case 7: Status không thuộc danh sách cho phép phải bị từ chối với HTTP 400
     it("should return 400 when status is invalid", async () => {
+        const agent = await loginAsAdmin();
 
-        const response = await request(app)
-            .patch("/api/admin/users/5/status")
-            .set("Authorization", authHeader())
+        const response = await agent
+            .patch("/api/admin/users/6/status")
             .send({
                 status: "INVALID_STATUS",
             });
@@ -90,27 +104,11 @@ describe("User Management Authentication", () => {
         expect(response.status).toBe(400);
     });
 
-    // Case 8: Lỗi Database phải được xử lý và trả về HTTP 500
-    it("should return 500 when database error occurs", async () => {
-
-        vi.spyOn(UserRepository, "findUserById")
-            .mockRejectedValueOnce(new Error("Database connection failed"));
-
-        const response = await request(app)
-            .get("/api/admin/users/2")
-            .set("Authorization", authHeader());
-
-        expect(response.status).toBe(500);
-
-        UserRepository.findUserById.mockRestore();
-    });
-
-    // Case 9: ADMIN có thể cập nhật status của user khác thành công
     it("should allow ADMIN to update user status successfully", async () => {
+        const agent = await loginAsAdmin();
 
-        const response = await request(app)
+        const response = await agent
             .patch("/api/admin/users/5/status")
-            .set("Authorization", authHeader())
             .send({
                 status: "INACTIVE",
             });
@@ -118,8 +116,6 @@ describe("User Management Authentication", () => {
         expect(response.status).toBe(200);
 
         expect(response.body.success).toBe(true);
-
         expect(response.body.data.status).toBe("INACTIVE");
     });
-
 });

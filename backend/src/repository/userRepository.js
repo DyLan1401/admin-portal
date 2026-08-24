@@ -1,6 +1,41 @@
 import pool from "../config/database.js";
 
 
+export const findUserForAuthentication = async (id) => {
+    const [[user]] = await pool.query(
+        `
+        SELECT
+            u.id,
+            u.email,
+            u.role,
+            u.status
+        FROM users u
+        WHERE u.id = ?
+        `,
+        [id]
+    );
+
+    return user;
+};
+
+export const findUserByEmail = async (email) => {
+    const [[user]] = await pool.query(
+        `
+        SELECT
+            u.id,  
+            u.email,
+            u.password,
+            u.role,
+            u.status
+        FROM users u
+        WHERE u.email = ?
+        `,
+        [email]
+    );
+
+    return user;
+}
+
 export const updateUserStatus = async ({
     id,
     status,
@@ -86,3 +121,4 @@ export const findUserById = async (id) => {
 
     return user;
 };
+

@@ -1,24 +1,50 @@
 import AppError from "../errors/AppError.js";
-
-export const authenticate = (req, res, next) => {
+import *  as UserRepository from "../repository/userRepository.js"
+import * as SessionService from "../session/sessionService.js"
+export const authenticate = async (req, res, next) => {
     try {
 
-        const authHeader = req.headers.authorization;
+        const session = await SessionService.getValidSession(req);
 
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            throw new AppError("Unauthorized: No token provided.", 401);
+        if (!session) {
+            return next(
+                new AppError("Unauthorized.", 401)
+            );
         }
 
-        const token = authHeader.split(" ")[1];
+        const user = await UserRepository.findUserForAuthentication(
+            session.userId
+        );
 
-        if (!token || token !== process.env.DEV_AUTH_TOKEN) {
-            throw new AppError("Invalid token.", 401);
+        if (!user) {
+
+            await SessionService.destroySession(req);
+
+            return next(
+                new AppError("Unauthorized.", 401)
+            );
+        }
+
+        if (user.status !== "ACTIVE") {
+            await SessionService.destroySession(req);
+
+            res.clearCookie("connect.sid", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            });
+
+            return next(
+                new AppError("Unauthorized.", 401)
+            );
         }
 
         req.user = {
-            id: Number(process.env.DEV_CURRENT_USER_ID),
-            role: process.env.DEV_CURRENT_USER_ROLE,
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            status: user.status,
         };
 
         next();
