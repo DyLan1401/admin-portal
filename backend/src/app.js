@@ -14,7 +14,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_DEV,
+    credentials: true,
+}));
 
 app.use(session(
     ({
@@ -39,7 +42,6 @@ app.use("/api/admin", imageRoute);
 app.use("/api/admin", userRoute);
 app.use("/api/auth", authRoute)
 
-app.use(globalErrorHandle);
 
 //test
 app.get("/health", (req, res) => {
@@ -47,5 +49,6 @@ app.get("/health", (req, res) => {
         status: "ok"
     });
 });
+app.use(globalErrorHandle);
 
 export default app;
